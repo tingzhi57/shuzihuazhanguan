@@ -1,5 +1,6 @@
 package com.example.martyrs.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -29,7 +30,9 @@ public class MartyrBasicInfo {
     @Column(name = "military_unit")
     private String militaryUnit;
 
-    private String rank;
+    @Column(name = "military_rank")
+    @JsonProperty("rank")
+    private String militaryRank;
 
     @Column(name = "sacrifice_location")
     private String sacrificeLocation;

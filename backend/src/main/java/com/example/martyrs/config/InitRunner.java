@@ -3,12 +3,14 @@ package com.example.martyrs.config;
 import com.example.martyrs.entity.*;
 import com.example.martyrs.repository.*;
 import com.example.martyrs.service.AuthService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Component
 public class InitRunner implements CommandLineRunner {
 
@@ -32,9 +34,13 @@ public class InitRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        authService.initAdmin();
-        if (martyrRepo.count() > 0) return;
-        seedData();
+        try {
+            authService.initAdmin();
+            if (martyrRepo.count() > 0) return;
+            seedData();
+        } catch (Exception e) {
+            log.warn("InitRunner skipped — database not ready: {}", e.getMessage());
+        }
     }
 
     private void seedData() {
@@ -48,7 +54,7 @@ public class InitRunner implements CommandLineRunner {
         m1.setEthnicity("汉族");
         m1.setPoliticalStatus("中共党员");
         m1.setMilitaryUnit("北京大学");
-        m1.setRank("教授");
+        m1.setMilitaryRank("教授");
         m1.setSacrificeLocation("北京市西城区");
         m1.setSacrificeReason("被反动军阀杀害");
         m1.setBurialLocation("北京市万安公墓");
@@ -75,7 +81,7 @@ public class InitRunner implements CommandLineRunner {
         m2.setEthnicity("汉族");
         m2.setPoliticalStatus("中共党员");
         m2.setMilitaryUnit("东北抗日联军");
-        m2.setRank("第三军二团政委");
+        m2.setMilitaryRank("第三军二团政委");
         m2.setSacrificeLocation("黑龙江省珠河县");
         m2.setSacrificeReason("被日军杀害");
         m2.setBurialLocation("哈尔滨烈士陵园");
@@ -99,7 +105,7 @@ public class InitRunner implements CommandLineRunner {
         m3.setEthnicity("汉族");
         m3.setPoliticalStatus("中共党员");
         m3.setMilitaryUnit("中国人民志愿军");
-        m3.setRank("第15军135团2营通讯员");
+        m3.setMilitaryRank("第15军135团2营通讯员");
         m3.setSacrificeLocation("朝鲜上甘岭");
         m3.setSacrificeReason("抗美援朝战争牺牲");
         m3.setBurialLocation("辽宁省沈阳市抗美援朝烈士陵园");
@@ -123,7 +129,7 @@ public class InitRunner implements CommandLineRunner {
         m4.setEthnicity("汉族");
         m4.setPoliticalStatus("中共候补党员");
         m4.setMilitaryUnit("文水县抗日民主政府");
-        m4.setRank("区妇联干事");
+        m4.setMilitaryRank("区妇联干事");
         m4.setSacrificeLocation("山西省文水县云周西村");
         m4.setSacrificeReason("被国民党反动派杀害");
         m4.setBurialLocation("山西省文水县刘胡兰纪念馆");
@@ -146,7 +152,7 @@ public class InitRunner implements CommandLineRunner {
         m5.setEthnicity("汉族");
         m5.setPoliticalStatus("中共党员");
         m5.setMilitaryUnit("东北抗日联军");
-        m5.setRank("第一路军总司令");
+        m5.setMilitaryRank("第一路军总司令");
         m5.setSacrificeLocation("吉林省濛江县");
         m5.setSacrificeReason("被日军包围后壮烈牺牲");
         m5.setBurialLocation("吉林省通化市杨靖宇烈士陵园");
