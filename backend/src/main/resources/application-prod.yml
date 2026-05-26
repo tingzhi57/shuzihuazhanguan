@@ -2,14 +2,6 @@ server:
   port: ${PORT:8080}
 
 spring:
-  datasource:
-    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/martyrs_db?useSSL=true&requireSSL=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8}
-    username: ${MYSQL_USER:root}
-    password: ${MYSQL_PASSWORD:}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 3
-      minimum-idle: 1
   jpa:
     hibernate:
       ddl-auto: update
