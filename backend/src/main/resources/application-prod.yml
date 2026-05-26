@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: ${TIDB_URL:jdbc:mysql://localhost:4000/martyrs_db?sslMode=REQUIRED&serverTimezone=Asia/Shanghai&characterEncoding=utf8mb4}
-    username: ${TIDB_USER:root}
-    password: ${TIDB_PASSWORD:}
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/martyrs_db?useSSL=true&requireSSL=true&serverTimezone=Asia/Shanghai&characterEncoding=utf8mb4}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 3

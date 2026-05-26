@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://KOYEB_BACKEND_URL/api/$1"
+      "destination": "https://shuzihuazhanguan-production.up.railway.app/api/$1"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "https://KOYEB_BACKEND_URL/uploads/$1"
+      "destination": "https://shuzihuazhanguan-production.up.railway.app/uploads/$1"
     },
     {
       "source": "/(.*)",

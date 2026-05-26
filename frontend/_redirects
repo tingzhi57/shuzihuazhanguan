@@ -1,0 +1,3 @@
+# Zeabur rewrite rules - Replace BACKEND_URL after backend deployment
+/api/*  https://BACKEND_URL/api/:splat  200
+/uploads/*  https://BACKEND_URL/uploads/:splat  200
