@@ -2,27 +2,31 @@ package com.example.martyrs.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 
 @Configuration
-@Profile("prod")
 public class DataSourceConfig {
 
     @Bean
-    @Primary
     public DataSource dataSource() {
         String mysqlUrl = System.getenv("MYSQL_URL");
         if (mysqlUrl == null) {
-            throw new IllegalStateException("MYSQL_URL environment variable is not set");
+            return DataSourceBuilder.create()
+                .url("jdbc:h2:mem:martyrs_db;DB_CLOSE_DELAY=-1;MODE=MySQL")
+                .username("sa")
+                .password("")
+                .driverClassName("org.h2.Driver")
+                .build();
         }
 
         if (mysqlUrl.startsWith("jdbc:")) {
-            return buildDataSource(mysqlUrl, System.getenv("MYSQL_USER"), System.getenv("MYSQL_PASSWORD"));
+            return buildHikariDataSource(mysqlUrl,
+                System.getenv("MYSQL_USER"),
+                System.getenv("MYSQL_PASSWORD"));
         }
 
         try {
@@ -45,13 +49,13 @@ public class DataSourceConfig {
                 host, portStr, database
             );
 
-            return buildDataSource(jdbcUrl, username, password);
+            return buildHikariDataSource(jdbcUrl, username, password);
         } catch (Exception e) {
             throw new RuntimeException("Failed to connect to MYSQL_URL: " + mysqlUrl, e);
         }
     }
 
-    private DataSource buildDataSource(String jdbcUrl, String username, String password) {
+    private DataSource buildHikariDataSource(String jdbcUrl, String username, String password) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
         config.setUsername(username != null ? username : "root");
@@ -59,7 +63,6 @@ public class DataSourceConfig {
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setMaximumPoolSize(3);
         config.setMinimumIdle(1);
-        config.setInitializationFailTimeout(-1);
         return new HikariDataSource(config);
     }
 }
