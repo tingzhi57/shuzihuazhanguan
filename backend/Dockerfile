@@ -8,5 +8,6 @@ RUN mvn package -DskipTests -B
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8080
-ENTRYPOINT ["java", "-Xmx200m", "-jar", "app.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-Xmx200m", "-jar", "app.jar"]
