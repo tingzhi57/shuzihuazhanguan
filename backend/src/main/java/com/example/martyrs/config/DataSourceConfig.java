@@ -39,7 +39,7 @@ public class DataSourceConfig {
             String password = userAndPassword.length > 1 ? userAndPassword[1] : "";
 
             String jdbcUrl = String.format(
-                "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8",
+                "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8",
                 host, portStr, database
             );
 
