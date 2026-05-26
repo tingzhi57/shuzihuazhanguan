@@ -1,0 +1,8 @@
+node_modules/
+dist/
+target/
+*.jar
+*.log
+.DS_Store
+uploads/
+.vercel
