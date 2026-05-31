@@ -32,7 +32,7 @@ public class MediaLibrary {
 
     @JsonIgnore
     @Lob
-    @Column(name = "file_data", columnDefinition = "BLOB")
+    @Column(name = "file_data", columnDefinition = "LONGBLOB")
     private byte[] fileData;
 
     @Column(name = "upload_date")
