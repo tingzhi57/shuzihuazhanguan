@@ -66,9 +66,6 @@
               </el-select>
             </el-form-item>
             <el-form-item label="标题"><el-input v-model="mediaForm.title" /></el-form-item>
-            <el-form-item label="类型">
-              <el-select v-model="mediaForm.type"><el-option label="图片" value="image" /><el-option label="视频" value="video" /><el-option label="音频" value="audio" /></el-select>
-            </el-form-item>
             <el-form-item label="上传文件">
               <el-upload
                 ref="uploadRef"
@@ -85,6 +82,9 @@
                   <span style="font-size: 12px; color: #909399">支持图片、视频、音频文件</span>
                 </template>
               </el-upload>
+              <span v-if="selectedFile" style="margin-left:12px">
+                <el-tag :type="fileTypeTag" size="small">{{ fileTypeLabel }}</el-tag>
+              </span>
             </el-form-item>
             <el-form-item label="文件路径" v-if="mediaForm.filePath">
               <el-tag closable @close="mediaForm.filePath = ''">{{ mediaForm.filePath }}</el-tag>
@@ -157,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, watch } from 'vue'
+import { ref, computed, onMounted, reactive, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Upload } from '@element-plus/icons-vue'
 import { martyrApi, deedApi, mediaApi, relicApi, honorApi } from '../../api'
@@ -213,12 +213,26 @@ async function saveDeed() {
 
 function handleFileChange(file) {
   selectedFile.value = file.raw
+  mediaForm.type = detectType(file.raw.name)
 }
 
 function handleFileRemove() {
   selectedFile.value = null
   mediaForm.filePath = ''
+  mediaForm.type = 'image'
 }
+
+function detectType(name) {
+  if (!name) return 'image'
+  const ext = name.includes('.') ? name.split('.').pop().toLowerCase() : ''
+  if (['mp4','avi','mov','wmv','flv','mkv'].includes(ext)) return 'video'
+  if (['mp3','wav','wma','aac','ogg'].includes(ext)) return 'audio'
+  return 'image'
+}
+
+const fileTypeMap = { image: { tag: 'success', label: '图片' }, video: { tag: 'warning', label: '视频' }, audio: { tag: 'info', label: '音频' } }
+const fileTypeTag = computed(() => fileTypeMap[mediaForm.type]?.tag || 'success')
+const fileTypeLabel = computed(() => fileTypeMap[mediaForm.type]?.label || '图片')
 
 async function saveMedia() {
   saving.value = true
