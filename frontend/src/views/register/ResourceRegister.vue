@@ -74,6 +74,7 @@
                 :limit="1"
                 :on-change="handleFileChange"
                 :on-remove="handleFileRemove"
+                :on-exceed="handleFileExceed"
               >
                 <el-button type="primary" plain>
                   <el-icon><Upload /></el-icon> 选择文件
@@ -214,6 +215,14 @@ async function saveDeed() {
 function handleFileChange(file) {
   selectedFile.value = file.raw
   mediaForm.type = detectType(file.raw.name)
+}
+
+function handleFileExceed(files) {
+  uploadRef.value?.clearFiles()
+  const file = files[0]
+  selectedFile.value = file.raw
+  mediaForm.type = detectType(file.raw.name)
+  uploadRef.value?.handleStart(file)
 }
 
 function handleFileRemove() {
