@@ -111,7 +111,7 @@ public class MartyrService {
     }
 
     public List<MediaLibrary> getMediaByOwner(String ownerType, Long ownerId) {
-        return mediaRepo.findByOwnerTypeAndOwnerIdAndDeletedAtIsNull(ownerType, ownerId);
+        return mediaRepo.findByOwnerTypeAndOwnerIdAndDeletedAtIsNullOrderByUploadDateAsc(ownerType, ownerId);
     }
 
     public List<MediaLibrary> getMediaByMartyrId(Long martyrId) {

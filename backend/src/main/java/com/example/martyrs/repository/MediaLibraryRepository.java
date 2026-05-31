@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface MediaLibraryRepository extends JpaRepository<MediaLibrary, Long> {
 
+    List<MediaLibrary> findByOwnerTypeAndOwnerIdAndDeletedAtIsNullOrderByUploadDateAsc(String ownerType, Long ownerId);
+
     List<MediaLibrary> findByOwnerTypeAndOwnerIdAndDeletedAtIsNull(String ownerType, Long ownerId);
 
     Page<MediaLibrary> findByDeletedAtIsNull(Pageable pageable);
