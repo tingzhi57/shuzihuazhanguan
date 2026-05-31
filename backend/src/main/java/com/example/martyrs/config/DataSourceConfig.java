@@ -24,7 +24,8 @@ public class DataSourceConfig {
         }
 
         if (mysqlUrl.startsWith("jdbc:")) {
-            return buildHikariDataSource(mysqlUrl,
+            String separator = mysqlUrl.contains("?") ? "&" : "?";
+            return buildHikariDataSource(mysqlUrl + separator + "useServerPrepStmts=true",
                 System.getenv("MYSQL_USER"),
                 System.getenv("MYSQL_PASSWORD"));
         }
@@ -45,7 +46,7 @@ public class DataSourceConfig {
             String password = userAndPassword.length > 1 ? userAndPassword[1] : "";
 
             String jdbcUrl = String.format(
-                "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8",
+                "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8&useServerPrepStmts=true",
                 host, portStr, database
             );
 
