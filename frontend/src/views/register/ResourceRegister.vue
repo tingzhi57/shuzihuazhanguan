@@ -71,10 +71,8 @@
                 ref="uploadRef"
                 :auto-upload="false"
                 :show-file-list="true"
-                :limit="1"
                 :on-change="handleFileChange"
                 :on-remove="handleFileRemove"
-                :on-exceed="handleFileExceed"
               >
                 <el-button type="primary" plain>
                   <el-icon><Upload /></el-icon> 选择文件
@@ -212,17 +210,16 @@ async function saveDeed() {
   } finally { saving.value = false }
 }
 
-function handleFileChange(file) {
-  selectedFile.value = file.raw
-  mediaForm.type = detectType(file.raw.name)
-}
-
-function handleFileExceed(files) {
-  uploadRef.value?.clearFiles()
-  const file = files[0]
-  selectedFile.value = file.raw
-  mediaForm.type = detectType(file.raw.name)
-  uploadRef.value?.handleStart(file)
+function handleFileChange(file, fileList) {
+  if (fileList.length > 1) {
+    uploadRef.value?.clearFiles()
+    selectedFile.value = file.raw
+    mediaForm.type = detectType(file.raw.name)
+    uploadRef.value?.handleStart(file)
+  } else {
+    selectedFile.value = file.raw
+    mediaForm.type = detectType(file.raw.name)
+  }
 }
 
 function handleFileRemove() {
