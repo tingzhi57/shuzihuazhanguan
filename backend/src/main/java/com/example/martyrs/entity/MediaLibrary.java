@@ -1,5 +1,6 @@
 package com.example.martyrs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -28,6 +29,11 @@ public class MediaLibrary {
 
     @Column(name = "is_avatar")
     private Boolean isAvatar = false;
+
+    @JsonIgnore
+    @Lob
+    @Column(name = "file_data", columnDefinition = "LONGBLOB")
+    private byte[] fileData;
 
     @Column(name = "upload_date")
     private LocalDateTime uploadDate;

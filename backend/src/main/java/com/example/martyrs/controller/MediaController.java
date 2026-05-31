@@ -1,21 +1,20 @@
 package com.example.martyrs.controller;
 
 import com.example.martyrs.entity.MediaLibrary;
+import com.example.martyrs.repository.MediaLibraryRepository;
 import com.example.martyrs.service.MartyrService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -23,9 +22,11 @@ import java.util.UUID;
 public class MediaController {
 
     private final MartyrService martyrService;
+    private final MediaLibraryRepository mediaRepository;
 
-    public MediaController(MartyrService martyrService) {
+    public MediaController(MartyrService martyrService, MediaLibraryRepository mediaRepository) {
         this.martyrService = martyrService;
+        this.mediaRepository = mediaRepository;
     }
 
     @GetMapping
@@ -58,30 +59,41 @@ public class MediaController {
                 originalName.substring(originalName.lastIndexOf(".") + 1) : "";
 
         try {
-            String uploadDir = System.getProperty("user.dir") + "/uploads/";
-            Path dir = Paths.get(uploadDir);
-            Files.createDirectories(dir);
-
-            String uuid = UUID.randomUUID().toString();
-            String filename = uuid + (ext.isEmpty() ? "" : "." + ext);
-            Path dest = dir.resolve(filename);
-            file.transferTo(dest.toFile());
-
             MediaLibrary media = new MediaLibrary();
             media.setTitle(title != null && !title.isEmpty() ? title : originalName);
             media.setType(type != null ? type : detectType(ext));
             media.setDescription(description);
             media.setMartyrId(martyrId);
             media.setFileSize(file.getSize());
-            media.setFilePath("/uploads/" + filename);
+            media.setFileData(file.getBytes());
             media.setUploadDate(LocalDateTime.now());
 
             MediaLibrary saved = martyrService.saveMedia(media);
-            return ResponseEntity.ok(Map.of("id", saved.getId(), "url", saved.getFilePath()));
+            String fileUrl = "/api/media/file/" + saved.getId();
+            saved.setFilePath(fileUrl);
+            martyrService.saveMedia(saved);
+            return ResponseEntity.ok(Map.of("id", saved.getId(), "url", fileUrl));
         } catch (IOException e) {
             log.error("Upload failed: {} file={} size={}", e.getMessage(), originalName, file.getSize(), e);
             return ResponseEntity.badRequest().body(Map.of("error", "上传失败: " + e.getMessage()));
         }
+    }
+
+    @GetMapping("file/{id}")
+    public ResponseEntity<byte[]> download(@PathVariable Long id) {
+        MediaLibrary media = mediaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("文件不存在"));
+        if (media.getFileData() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String title = media.getTitle();
+        String ext = title != null && title.contains(".") ?
+                title.substring(title.lastIndexOf(".") + 1) : "";
+        MediaType mediaType = getMediaType(ext);
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + title + "\"")
+                .body(media.getFileData());
     }
 
     private String detectType(String ext) {
@@ -90,6 +102,23 @@ public class MediaController {
             case "mp4", "avi", "mov", "wmv", "flv", "mkv" -> "video";
             case "mp3", "wav", "wma", "aac", "ogg" -> "audio";
             default -> "image";
+        };
+    }
+
+    private MediaType getMediaType(String format) {
+        if (format == null) return MediaType.APPLICATION_OCTET_STREAM;
+        return switch (format.toLowerCase()) {
+            case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
+            case "png" -> MediaType.IMAGE_PNG;
+            case "gif" -> MediaType.IMAGE_GIF;
+            case "webp" -> MediaType.valueOf("image/webp");
+            case "mp4" -> MediaType.valueOf("video/mp4");
+            case "avi" -> MediaType.valueOf("video/x-msvideo");
+            case "mov" -> MediaType.valueOf("video/quicktime");
+            case "mp3" -> MediaType.valueOf("audio/mpeg");
+            case "wav" -> MediaType.valueOf("audio/wav");
+            case "ogg" -> MediaType.valueOf("audio/ogg");
+            default -> MediaType.APPLICATION_OCTET_STREAM;
         };
     }
 
