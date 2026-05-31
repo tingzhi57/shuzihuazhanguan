@@ -91,7 +91,20 @@
             </el-form-item>
             <el-form-item label="描述"><el-input v-model="mediaForm.description" type="textarea" /></el-form-item>
             <el-form-item v-if="uploadProgress > 0" style="margin-bottom: 12px">
-              <el-progress :percentage="uploadProgress" :stroke-width="16" />
+              <div style="width: 100%">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px">
+                  <span style="color:#409eff;font-weight:500">{{ uploadingName }}</span>
+                  <span style="color:#909399">{{ uploadProgress }}%</span>
+                </div>
+                <el-progress
+                  :percentage="uploadProgress"
+                  :stroke-width="18"
+                  :color="uploadColors"
+                  striped
+                  striped-flow
+                  :duration="6"
+                />
+              </div>
             </el-form-item>
             <el-form-item v-if="mediaForm.type === 'image' && mediaForm.martyrId">
               <el-checkbox v-model="mediaForm.isAvatar">设为烈士头像</el-checkbox>
@@ -156,7 +169,13 @@ const martyrOptions = ref([])
 const uploadRef = ref(null)
 const selectedFile = ref(null)
 const uploadProgress = ref(0)
-
+const uploadingName = ref('')
+const uploadColors = [
+  { color: '#409eff', percentage: 30 },
+  { color: '#67c23a', percentage: 70 },
+  { color: '#e6a23c', percentage: 100 }
+]
+ 
 const defaultMartyrForm = () => ({
   name: '', gender: '男', ethnicity: '', birthDate: '', deathDate: '',
   politicalStatus: '', birthplace: '', militaryUnit: '', rank: '',
@@ -204,6 +223,7 @@ function handleFileRemove() {
 async function saveMedia() {
   saving.value = true
   uploadProgress.value = 0
+  uploadingName.value = selectedFile.value?.name || mediaForm.title
   try {
     if (selectedFile.value) {
       const formData = new FormData()
@@ -228,7 +248,7 @@ async function saveMedia() {
     selectedFile.value = null
     uploadRef.value?.clearFiles()
     Object.assign(mediaForm, { martyrId: null, title: '', type: 'image', description: '', filePath: '', isAvatar: false })
-  } finally { saving.value = false; setTimeout(() => { uploadProgress.value = 0 }, 1000) }
+  } finally { saving.value = false; setTimeout(() => { uploadProgress.value = 0; uploadingName.value = '' }, 1500) }
 }
 
 async function saveRelic() {
