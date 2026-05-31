@@ -51,7 +51,7 @@ export const mediaApi = {
   list(params) { return request.get('/media', { params }) },
   getByMartyr(martyrId) { return request.get(`/media/martyr/${martyrId}`) },
   create(data) { return request.post('/media', data) },
-  upload(formData) { return request.post('/media/upload', formData) },
+  upload(formData, onProgress) { return request.post('/media/upload', formData, { onUploadProgress: onProgress }) },
   update(id, data) { return request.put(`/media/${id}`, data) },
   setAvatar(id) { return request.put(`/media/${id}/avatar`) },
   clearAvatar(id) { return request.delete(`/media/${id}/avatar`) },

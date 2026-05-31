@@ -90,6 +90,9 @@
               <el-tag closable @close="mediaForm.filePath = ''">{{ mediaForm.filePath }}</el-tag>
             </el-form-item>
             <el-form-item label="描述"><el-input v-model="mediaForm.description" type="textarea" /></el-form-item>
+            <el-form-item v-if="uploadProgress > 0" style="margin-bottom: 12px">
+              <el-progress :percentage="uploadProgress" :stroke-width="16" />
+            </el-form-item>
             <el-form-item v-if="mediaForm.type === 'image' && mediaForm.martyrId">
               <el-checkbox v-model="mediaForm.isAvatar">设为烈士头像</el-checkbox>
             </el-form-item>
@@ -152,6 +155,7 @@ const saving = ref(false)
 const martyrOptions = ref([])
 const uploadRef = ref(null)
 const selectedFile = ref(null)
+const uploadProgress = ref(0)
 
 const defaultMartyrForm = () => ({
   name: '', gender: '男', ethnicity: '', birthDate: '', deathDate: '',
@@ -199,6 +203,7 @@ function handleFileRemove() {
 
 async function saveMedia() {
   saving.value = true
+  uploadProgress.value = 0
   try {
     if (selectedFile.value) {
       const formData = new FormData()
@@ -207,7 +212,9 @@ async function saveMedia() {
       formData.append('type', mediaForm.type)
       formData.append('description', mediaForm.description || '')
       if (mediaForm.martyrId) formData.append('martyrId', mediaForm.martyrId)
-      const uploadRes = await mediaApi.upload(formData)
+      const uploadRes = await mediaApi.upload(formData, (e) => {
+        uploadProgress.value = Math.round((e.loaded / e.total) * 100)
+      })
       if (mediaForm.isAvatar) {
         await mediaApi.setAvatar(uploadRes.id)
       }
@@ -221,7 +228,7 @@ async function saveMedia() {
     selectedFile.value = null
     uploadRef.value?.clearFiles()
     Object.assign(mediaForm, { martyrId: null, title: '', type: 'image', description: '', filePath: '', isAvatar: false })
-  } finally { saving.value = false }
+  } finally { saving.value = false; setTimeout(() => { uploadProgress.value = 0 }, 1000) }
 }
 
 async function saveRelic() {
