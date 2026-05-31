@@ -34,8 +34,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题" show-overflow-tooltip />
-        <el-table-column label="所属烈士" width="120">
-          <template #default="{ row }">{{ martyrMap[row.martyrId] || '-' }}</template>
+        <el-table-column label="所属类型" width="90">
+          <template #default="{ row }">
+            <el-tag :type="row.ownerType === 'MARTYR' ? 'danger' : 'warning'" size="small">
+              {{ row.ownerType === 'MARTYR' ? '烈士' : '文物' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="所属对象" width="120">
+          <template #default="{ row }">
+            {{ row.ownerType === 'MARTYR' ? (martyrMap[row.ownerId] || '-') : (relicMap[row.ownerId] || '-') }}
+          </template>
         </el-table-column>
         <el-table-column prop="type" label="类型" width="80">
           <template #default="{ row }">
@@ -51,7 +60,7 @@
         <el-table-column label="设为头像" width="100" v-if="store.isAdmin">
           <template #default="{ row }">
             <el-checkbox
-              v-if="row.type === 'image' && row.martyrId"
+              v-if="row.type === 'image' && row.ownerType === 'MARTYR' && row.ownerId"
               :model-value="row.isAvatar"
               @change="handleAvatarChange(row, $event)"
             />
@@ -98,9 +107,15 @@
     <el-dialog v-model="showDialog" :title="editForm.id ? '编辑媒体' : '新增媒体'" width="600px">
       <el-form :model="editForm" label-width="80px">
         <el-form-item label="标题"><el-input v-model="editForm.title" /></el-form-item>
-        <el-form-item label="所属烈士">
-          <el-select v-model="editForm.martyrId" filterable placeholder="请选择烈士" clearable style="width: 100%">
-            <el-option v-for="m in martyrOptions" :key="m.id" :label="m.name" :value="m.id" />
+        <el-form-item label="所属类型">
+          <el-select v-model="editForm.ownerType" style="width: 100%">
+            <el-option label="烈士" value="MARTYR" />
+            <el-option label="文物" value="RELIC" />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="editForm.ownerType === 'MARTYR' ? '所属烈士' : '所属文物'">
+          <el-select v-model="editForm.ownerId" filterable placeholder="请搜索选择" clearable style="width: 100%">
+            <el-option v-for="m in (editForm.ownerType === 'MARTYR' ? martyrOptions : relicOptions)" :key="m.id" :label="m.name" :value="m.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="类型">
@@ -122,7 +137,7 @@
 
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
-import { mediaApi, martyrApi } from '../../api'
+import { mediaApi, martyrApi, relicApi } from '../../api'
 import { useAppStore } from '../../stores/app'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
@@ -139,6 +154,8 @@ const previewDialog = ref(false)
 const previewItem = ref(null)
 const martyrOptions = ref([])
 const martyrMap = reactive({})
+const relicOptions = ref([])
+const relicMap = reactive({})
 
 function formatSize(bytes) {
   if (!bytes) return '-'
@@ -222,8 +239,17 @@ async function loadMartyrOptions() {
   } catch {}
 }
 
+async function loadRelicOptions() {
+  try {
+    const res = await relicApi.list({ page: 0, size: 1000 })
+    relicOptions.value = res.content
+    res.content.forEach(r => { relicMap[r.id] = r.name })
+  } catch {}
+}
+
 onMounted(() => {
   loadData()
   loadMartyrOptions()
+  loadRelicOptions()
 })
 </script>

@@ -13,8 +13,11 @@ public class MediaLibrary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "martyr_id")
-    private Long martyrId;
+    @Column(name = "owner_type")
+    private String ownerType = "MARTYR";
+
+    @Column(name = "owner_id")
+    private Long ownerId;
 
     private String title;
     private String type;

@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface MediaLibraryRepository extends JpaRepository<MediaLibrary, Long> {
 
-    List<MediaLibrary> findByMartyrIdAndDeletedAtIsNull(Long martyrId);
+    List<MediaLibrary> findByOwnerTypeAndOwnerIdAndDeletedAtIsNull(String ownerType, Long ownerId);
 
     Page<MediaLibrary> findByDeletedAtIsNull(Pageable pageable);
 

@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS martyr_deed (
 -- 影像音视频表
 CREATE TABLE IF NOT EXISTS media_library (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    martyr_id BIGINT NOT NULL COMMENT '烈士ID',
+    owner_type VARCHAR(20) DEFAULT 'MARTYR' COMMENT '所属类型：MARTYR-烈士 RELIC-文物',
+    owner_id BIGINT COMMENT '所属ID',
     title VARCHAR(255) NOT NULL COMMENT '标题',
     type VARCHAR(50) COMMENT '类型：image/video/audio',
     file_path VARCHAR(500) COMMENT '文件路径',
@@ -59,7 +60,7 @@ CREATE TABLE IF NOT EXISTS media_library (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at DATETIME DEFAULT NULL,
-    INDEX idx_martyr_id (martyr_id)
+    INDEX idx_owner (owner_type, owner_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='影像音视频表';
 
 -- 文物实物表

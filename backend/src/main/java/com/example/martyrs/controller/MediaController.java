@@ -37,6 +37,13 @@ public class MediaController {
         return ResponseEntity.ok(martyrService.getMediaPage(page, size, keyword));
     }
 
+    @GetMapping("/owner")
+    public ResponseEntity<List<MediaLibrary>> getByOwner(
+            @RequestParam(defaultValue = "MARTYR") String ownerType,
+            @RequestParam Long ownerId) {
+        return ResponseEntity.ok(martyrService.getMediaByOwner(ownerType, ownerId));
+    }
+
     @GetMapping("/martyr/{martyrId}")
     public ResponseEntity<List<MediaLibrary>> getByMartyr(@PathVariable Long martyrId) {
         return ResponseEntity.ok(martyrService.getMediaByMartyrId(martyrId));
@@ -53,7 +60,8 @@ public class MediaController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String type,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false) Long martyrId) {
+            @RequestParam(required = false) String ownerType,
+            @RequestParam(required = false) Long ownerId) {
         String originalName = file.getOriginalFilename();
         String ext = originalName != null && originalName.contains(".") ?
                 originalName.substring(originalName.lastIndexOf(".") + 1) : "";
@@ -63,7 +71,8 @@ public class MediaController {
             media.setTitle(title != null && !title.isEmpty() ? title : originalName);
             media.setType(type != null ? type : detectType(ext));
             media.setDescription(description);
-            media.setMartyrId(martyrId);
+            media.setOwnerType(ownerType != null ? ownerType : "MARTYR");
+            media.setOwnerId(ownerId);
             media.setFileSize(file.getSize());
             media.setFileData(file.getBytes());
             media.setUploadDate(LocalDateTime.now());

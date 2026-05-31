@@ -60,7 +60,7 @@ public class MartyrService {
             d.setStatus(0);
             deedRepo.save(d);
         });
-        mediaRepo.findByMartyrIdAndDeletedAtIsNull(id).forEach(m -> {
+        mediaRepo.findByOwnerTypeAndOwnerIdAndDeletedAtIsNull("MARTYR", id).forEach(m -> {
             m.setDeletedAt(LocalDateTime.now());
             m.setStatus(0);
             mediaRepo.save(m);
@@ -110,8 +110,12 @@ public class MartyrService {
         return mediaRepo.findByDeletedAtIsNull(pr);
     }
 
+    public List<MediaLibrary> getMediaByOwner(String ownerType, Long ownerId) {
+        return mediaRepo.findByOwnerTypeAndOwnerIdAndDeletedAtIsNull(ownerType, ownerId);
+    }
+
     public List<MediaLibrary> getMediaByMartyrId(Long martyrId) {
-        return mediaRepo.findByMartyrIdAndDeletedAtIsNull(martyrId);
+        return getMediaByOwner("MARTYR", martyrId);
     }
 
     public MediaLibrary saveMedia(MediaLibrary media) {
@@ -129,13 +133,13 @@ public class MartyrService {
     @Transactional
     public void setAvatar(Long mediaId) {
         MediaLibrary media = mediaRepo.findById(mediaId).orElseThrow(() -> new RuntimeException("媒体资源不存在"));
-        if (media.getMartyrId() == null) {
-            throw new RuntimeException("请先关联烈士");
+        if (!"MARTYR".equals(media.getOwnerType()) || media.getOwnerId() == null) {
+            throw new RuntimeException("只有属于烈士的图片才能设为头像");
         }
         media.setIsAvatar(true);
         mediaRepo.save(media);
 
-        MartyrBasicInfo martyr = martyrRepo.findById(media.getMartyrId())
+        MartyrBasicInfo martyr = martyrRepo.findById(media.getOwnerId())
                 .orElseThrow(() -> new RuntimeException("烈士不存在"));
         martyr.setPhoto(media.getFilePath());
         martyrRepo.save(martyr);
@@ -147,8 +151,8 @@ public class MartyrService {
         media.setIsAvatar(false);
         mediaRepo.save(media);
 
-        if (media.getMartyrId() != null) {
-            MartyrBasicInfo martyr = martyrRepo.findById(media.getMartyrId())
+        if ("MARTYR".equals(media.getOwnerType()) && media.getOwnerId() != null) {
+            MartyrBasicInfo martyr = martyrRepo.findById(media.getOwnerId())
                     .orElseThrow(() -> new RuntimeException("烈士不存在"));
             martyr.setPhoto(null);
             martyrRepo.save(martyr);

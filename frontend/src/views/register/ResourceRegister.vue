@@ -60,9 +60,15 @@
 
         <el-tab-pane label="影像音视频" name="media">
           <el-form :model="mediaForm" label-width="100px">
-            <el-form-item label="所属烈士">
-              <el-select v-model="mediaForm.martyrId" filterable placeholder="请搜索选择烈士">
-                <el-option v-for="m in martyrOptions" :key="m.id" :label="m.name" :value="m.id" />
+            <el-form-item label="所属类型">
+              <el-select v-model="mediaForm.ownerType">
+                <el-option label="烈士" value="MARTYR" />
+                <el-option label="文物" value="RELIC" />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="mediaForm.ownerType === 'MARTYR' ? '所属烈士' : '所属文物'">
+              <el-select v-model="mediaForm.ownerId" filterable placeholder="请搜索选择">
+                <el-option v-for="m in (mediaForm.ownerType === 'MARTYR' ? martyrOptions : relicOptions)" :key="m.id" :label="m.name" :value="m.id" />
               </el-select>
             </el-form-item>
             <el-form-item label="标题"><el-input v-model="mediaForm.title" /></el-form-item>
@@ -105,7 +111,7 @@
                 />
               </div>
             </el-form-item>
-            <el-form-item v-if="mediaForm.type === 'image' && mediaForm.martyrId">
+            <el-form-item v-if="mediaForm.type === 'image' && mediaForm.ownerType === 'MARTYR' && mediaForm.ownerId">
               <el-checkbox v-model="mediaForm.isAvatar">设为烈士头像</el-checkbox>
             </el-form-item>
             <el-form-item><el-button type="primary" @click="saveMedia" :loading="saving">提交登记</el-button></el-form-item>
@@ -165,6 +171,7 @@ import { ElMessage } from 'element-plus'
 const activeTab = ref('martyr')
 const saving = ref(false)
 const martyrOptions = ref([])
+const relicOptions = ref([])
 const uploadRef = ref(null)
 const selectedFile = ref(null)
 const uploadProgress = ref(0)
@@ -183,13 +190,15 @@ const defaultMartyrForm = () => ({
 
 const martyrForm = reactive(defaultMartyrForm())
 const deedForm = reactive({ martyrId: null, title: '', deedType: '事迹', content: '', source: '', date: '', author: '' })
-const mediaForm = reactive({ martyrId: null, title: '', type: 'image', description: '', filePath: '', isAvatar: false })
+const mediaForm = reactive({ ownerType: 'MARTYR', ownerId: null, title: '', type: 'image', description: '', filePath: '', isAvatar: false })
 const relicForm = reactive({ martyrId: null, name: '', category: '', material: '', era: '', origin: '', preservationState: '', location: '', description: '' })
 const honorForm = reactive({ martyrId: null, honorName: '', honorType: '', issuingAuthority: '', issueDate: '', description: '' })
 
 async function loadMartyrOptions() {
   const res = await martyrApi.list({ page: 0, size: 1000 })
   martyrOptions.value = res.content
+  const relicRes = await relicApi.list({ page: 0, size: 1000 })
+  relicOptions.value = relicRes.content
 }
 
 async function saveMartyr() {
@@ -251,7 +260,8 @@ async function saveMedia() {
       formData.append('title', mediaForm.title || selectedFile.value.name)
       formData.append('type', mediaForm.type)
       formData.append('description', mediaForm.description || '')
-      if (mediaForm.martyrId) formData.append('martyrId', mediaForm.martyrId)
+      formData.append('ownerType', mediaForm.ownerType)
+      if (mediaForm.ownerId) formData.append('ownerId', mediaForm.ownerId)
       const uploadRes = await mediaApi.upload(formData, (e) => {
         uploadProgress.value = Math.round((e.loaded / e.total) * 100)
       })
@@ -267,7 +277,7 @@ async function saveMedia() {
     ElMessage.success('影像音视频登记成功')
     selectedFile.value = null
     uploadRef.value?.clearFiles()
-    Object.assign(mediaForm, { martyrId: null, title: '', type: 'image', description: '', filePath: '', isAvatar: false })
+    Object.assign(mediaForm, { ownerType: 'MARTYR', ownerId: null, title: '', type: 'image', description: '', filePath: '', isAvatar: false })
   } finally { saving.value = false; setTimeout(() => { uploadProgress.value = 0; uploadingName.value = '' }, 1500) }
 }
 

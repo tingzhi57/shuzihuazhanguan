@@ -49,6 +49,7 @@ export const deedApi = {
 
 export const mediaApi = {
   list(params) { return request.get('/media', { params }) },
+  getByOwner(ownerType, ownerId) { return request.get('/media/owner', { params: { ownerType, ownerId } }) },
   getByMartyr(martyrId) { return request.get(`/media/martyr/${martyrId}`) },
   create(data) { return request.post('/media', data) },
   upload(formData, onProgress) { return request.post('/media/upload', formData, { onUploadProgress: onProgress }) },
