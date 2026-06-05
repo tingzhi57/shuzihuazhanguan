@@ -5,7 +5,7 @@ export const useAppStore = defineStore('app', () => {
   const token = ref(localStorage.getItem('token') || '')
   const role = ref(localStorage.getItem('role') || '')
   const nickname = ref(localStorage.getItem('nickname') || '')
-  const sidebarCollapsed = ref(false)
+  const sidebarCollapsed = ref(true)
 
   const isAdmin = computed(() => role.value === 'ADMIN')
   const isLoggedIn = computed(() => !!token.value)
