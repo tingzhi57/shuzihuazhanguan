@@ -1,11 +1,15 @@
 <template>
   <el-container style="height: 100vh">
-    <el-aside v-if="!isMobile" :width="store.sidebarCollapsed ? '64px' : '220px'" style="background: #304156; transition: width 0.3s">
+    <el-aside v-if="!isMobile" :width="store.sidebarCollapsed ? '64px' : '220px'" style="background: #304156; transition: width 0.3s" class="sidebar">
       <div class="logo" :style="{ width: store.sidebarCollapsed ? '64px' : '220px' }">
         <span v-if="!store.sidebarCollapsed">烈士数字展厅</span>
         <span v-else>展</span>
       </div>
       <SidebarMenu :collapse="store.sidebarCollapsed" />
+      <div class="sidebar-footer" @click="store.toggleSidebar">
+        <el-icon :size="18"><Fold v-if="!store.sidebarCollapsed" /><Expand v-else /></el-icon>
+        <span v-if="!store.sidebarCollapsed">收缩菜单</span>
+      </div>
     </el-aside>
     <el-container>
       <el-header style="background: #fff; border-bottom: 1px solid #e6e6e6; display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 20px">
@@ -72,6 +76,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
 .logo {
   height: 60px;
   display: flex;
@@ -83,10 +92,30 @@ onUnmounted(() => {
   background: #1f2d3d;
   overflow: hidden;
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #bfcbd9;
+  font-size: 13px;
+  cursor: pointer;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.sidebar-footer:hover {
+  color: #409eff;
 }
 
 .el-menu {
   border-right: none;
+  flex: 1;
 }
 
 .header-title {
