@@ -5,7 +5,7 @@ export const useAppStore = defineStore('app', () => {
   const token = ref(localStorage.getItem('token') || '')
   const role = ref(localStorage.getItem('role') || '')
   const nickname = ref(localStorage.getItem('nickname') || '')
-  const sidebarCollapsed = ref(true)
+  const sidebarCollapsed = ref(localStorage.getItem('sidebarCollapsed') !== 'false')
 
   const isAdmin = computed(() => role.value === 'ADMIN')
   const isLoggedIn = computed(() => !!token.value)
@@ -26,10 +26,12 @@ export const useAppStore = defineStore('app', () => {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
     localStorage.removeItem('nickname')
+    localStorage.removeItem('sidebarCollapsed')
   }
 
   function toggleSidebar() {
     sidebarCollapsed.value = !sidebarCollapsed.value
+    localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value)
   }
 
   return { token, role, nickname, sidebarCollapsed, isAdmin, isLoggedIn, setUser, logout, toggleSidebar }
