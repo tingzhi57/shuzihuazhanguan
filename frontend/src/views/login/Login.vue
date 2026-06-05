@@ -80,4 +80,16 @@ async function handleLogin() {
   color: #303133;
   margin-bottom: 4px;
 }
+
+@media (max-width: 768px) {
+  .login-card {
+    width: 92%;
+    padding: 28px 20px;
+    margin: 0 16px;
+  }
+
+  .login-card h2 {
+    font-size: 18px;
+  }
+}
 </style>

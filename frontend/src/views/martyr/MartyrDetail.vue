@@ -5,14 +5,14 @@
     </el-button>
 
     <el-card shadow="never" v-loading="loading">
-      <div style="display: flex; gap: 24px">
-        <div style="width: 160px; height: 200px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; background: #f0f2f5">
+      <div class="martyr-header">
+        <div class="martyr-avatar">
           <el-image v-if="martyr.photo" :src="martyr.photo" style="width: 100%; height: 100%" fit="cover" />
           <el-icon v-else :size="64" style="color: #c0c4cc"><User /></el-icon>
         </div>
-        <div style="flex: 1">
-          <h2 style="font-size: 24px; margin-bottom: 16px">{{ martyr.name }}</h2>
-          <el-descriptions :column="3" border>
+        <div style="flex: 1; min-width: 0">
+          <h2 class="martyr-name">{{ martyr.name }}</h2>
+          <el-descriptions :column="3" border class="martyr-descriptions">
             <el-descriptions-item label="性别">{{ martyr.gender }}</el-descriptions-item>
             <el-descriptions-item label="民族">{{ martyr.ethnicity || '-' }}</el-descriptions-item>
             <el-descriptions-item label="政治面貌">{{ martyr.politicalStatus || '-' }}</el-descriptions-item>
@@ -150,3 +150,48 @@ async function loadData() {
 onMounted(loadData)
 watch(() => route.params.id, loadData)
 </script>
+
+<style scoped>
+.martyr-header {
+  display: flex;
+  gap: 24px;
+}
+
+.martyr-avatar {
+  width: 160px;
+  height: 200px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #f0f2f5;
+}
+
+.martyr-name {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .martyr-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .martyr-avatar {
+    width: 120px;
+    height: 150px;
+  }
+
+  .martyr-name {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .martyr-descriptions :deep(.el-descriptions__table) {
+    table-layout: auto;
+  }
+}
+</style>

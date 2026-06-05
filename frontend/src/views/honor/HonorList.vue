@@ -8,7 +8,8 @@
     </div>
 
     <el-card shadow="never">
-      <el-table :data="list" stripe v-loading="loading">
+      <div class="table-wrapper">
+        <el-table :data="list" stripe v-loading="loading">
         <el-table-column prop="honorName" label="荣誉名称" show-overflow-tooltip />
         <el-table-column prop="honorType" label="类型" width="120" />
         <el-table-column prop="issuingAuthority" label="颁发单位" show-overflow-tooltip />
@@ -20,19 +21,20 @@
             <el-button size="small" type="danger" @click="handleDelete(row)" v-if="store.isAdmin">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
 
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <el-pagination v-model:current-page="page" :page-size="size" :total="total" @current-change="loadData" layout="prev, pager, next, total" />
       </div>
     </el-card>
 
-    <el-dialog v-model="showDialog" :title="editForm.id ? '编辑荣誉' : '新增荣誉'" width="600px">
+    <el-dialog v-model="showDialog" :title="editForm.id ? '编辑荣誉' : '新增荣誉'" width="600px" class="mobile-dialog">
       <el-form :model="editForm" label-width="100px">
         <el-form-item label="荣誉名称"><el-input v-model="editForm.honorName" /></el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12"><el-form-item label="荣誉类型"><el-input v-model="editForm.honorType" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="颁发单位"><el-input v-model="editForm.issuingAuthority" /></el-form-item></el-col>
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12"><el-form-item label="荣誉类型"><el-input v-model="editForm.honorType" /></el-form-item></el-col>
+          <el-col :xs="24" :sm="12" :span="12"><el-form-item label="颁发单位"><el-input v-model="editForm.issuingAuthority" /></el-form-item></el-col>
         </el-row>
         <el-form-item label="颁发日期"><el-date-picker v-model="editForm.issueDate" type="date" value-format="YYYY-MM-DD" /></el-form-item>
         <el-form-item label="描述"><el-input v-model="editForm.description" type="textarea" /></el-form-item>
@@ -106,3 +108,22 @@ async function handleSave() {
 
 onMounted(loadData)
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .form-row :deep(.el-col) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-row .el-form-item {
+    margin-bottom: 0;
+  }
+}
+</style>

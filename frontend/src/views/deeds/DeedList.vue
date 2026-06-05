@@ -8,7 +8,8 @@
     </div>
 
     <el-card shadow="never">
-      <el-table :data="list" stripe v-loading="loading">
+      <div class="table-wrapper">
+        <el-table :data="list" stripe v-loading="loading">
         <el-table-column prop="title" label="标题" show-overflow-tooltip />
         <el-table-column prop="deedType" label="类型" width="80" />
         <el-table-column prop="date" label="日期" width="120" />
@@ -20,24 +21,25 @@
             <el-button size="small" type="danger" @click="handleDelete(row)" v-if="store.isAdmin">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
 
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <el-pagination v-model:current-page="page" :page-size="size" :total="total" @current-change="loadData" layout="prev, pager, next, total" />
       </div>
     </el-card>
 
-    <el-dialog v-model="showDialog" :title="editForm.id ? '编辑事迹' : '新增事迹'" width="700px">
+    <el-dialog v-model="showDialog" :title="editForm.id ? '编辑事迹' : '新增事迹'" width="700px" class="mobile-dialog">
       <el-form :model="editForm" label-width="80px">
         <el-form-item label="标题"><el-input v-model="editForm.title" /></el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12"><el-form-item label="类型"><el-select v-model="editForm.deedType"><el-option label="事迹" value="事迹" /><el-option label="史料" value="史料" /></el-select></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="日期"><el-date-picker v-model="editForm.date" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12"><el-form-item label="类型"><el-select v-model="editForm.deedType"><el-option label="事迹" value="事迹" /><el-option label="史料" value="史料" /></el-select></el-form-item></el-col>
+          <el-col :xs="24" :sm="12" :span="12"><el-form-item label="日期"><el-date-picker v-model="editForm.date" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
         </el-row>
         <el-form-item label="内容"><el-input v-model="editForm.content" type="textarea" :rows="6" /></el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12"><el-form-item label="来源"><el-input v-model="editForm.source" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="作者"><el-input v-model="editForm.author" /></el-form-item></el-col>
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12"><el-form-item label="来源"><el-input v-model="editForm.source" /></el-form-item></el-col>
+          <el-col :xs="24" :sm="12" :span="12"><el-form-item label="作者"><el-input v-model="editForm.author" /></el-form-item></el-col>
         </el-row>
       </el-form>
       <template #footer>
@@ -109,3 +111,22 @@ async function handleSave() {
 
 onMounted(loadData)
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .form-row :deep(.el-col) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-row .el-form-item {
+    margin-bottom: 0;
+  }
+}
+</style>

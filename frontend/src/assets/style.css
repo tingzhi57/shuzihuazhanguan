@@ -137,3 +137,63 @@ html, body, #app {
   color: #606266;
   line-height: 1.6;
 }
+
+/* ===== 移动端响应式 ===== */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 12px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .page-header h2 {
+    font-size: 17px;
+  }
+
+  .stat-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 14px;
+  }
+
+  .stat-card .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .stat-card .stat-info .value {
+    font-size: 20px;
+  }
+
+  .relic-gallery {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* 表格在移动端支持横向滚动 */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-wrapper .el-table {
+  min-width: 700px;
+}
+
+/* 移动端弹窗全宽 */
+@media (max-width: 768px) {
+  .el-dialog {
+    width: 92% !important;
+    max-width: 92% !important;
+  }
+}

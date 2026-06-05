@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+    <div class="chart-grid">
       <el-card shadow="never">
         <template #header>各类资源数量统计</template>
         <div ref="barChartRef" style="height: 350px"></div>
@@ -81,3 +81,17 @@ function renderCharts() {
 
 onMounted(loadStats)
 </script>
+
+<style scoped>
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

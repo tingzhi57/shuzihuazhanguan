@@ -6,7 +6,8 @@
     </div>
 
     <el-card shadow="never">
-      <el-table :data="list" stripe v-loading="loading">
+      <div class="table-wrapper">
+        <el-table :data="list" stripe v-loading="loading">
         <el-table-column prop="name" label="姓名" width="120" />
         <el-table-column prop="gender" label="性别" width="60" />
         <el-table-column prop="birthDate" label="出生日期" width="120" />
@@ -20,7 +21,8 @@
             <el-button size="small" type="danger" @click="handlePermanentDelete(row)">永久删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
       <el-empty v-if="!list.length && !loading" description="回收站为空" />
     </el-card>
   </div>

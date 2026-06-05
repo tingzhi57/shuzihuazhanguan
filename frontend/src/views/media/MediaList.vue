@@ -8,7 +8,8 @@
     </div>
 
     <el-card shadow="never">
-      <el-table :data="list" stripe v-loading="loading">
+      <div class="table-wrapper">
+        <el-table :data="list" stripe v-loading="loading">
         <el-table-column label="预览" width="100">
           <template #default="{ row }">
             <el-image
@@ -75,14 +76,15 @@
             <el-button size="small" type="danger" @click="handleDelete(row)" v-if="store.isAdmin">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
 
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <el-pagination v-model:current-page="page" :page-size="size" :total="total" @current-change="loadData" layout="prev, pager, next, total" />
       </div>
     </el-card>
 
-    <el-dialog v-model="previewDialog" :title="previewItem?.title || '预览'" width="700px" destroy-on-close>
+    <el-dialog v-model="previewDialog" :title="previewItem?.title || '预览'" width="700px" destroy-on-close class="mobile-dialog">
       <div style="display: flex; flex-direction: column; align-items: center">
         <img v-if="previewItem?.type === 'image'" :src="previewItem.filePath" style="max-width: 100%; max-height: 500px; border-radius: 4px" />
         <video v-else-if="previewItem?.type === 'video'" :src="previewItem.filePath" controls style="max-width: 100%; max-height: 500px; border-radius: 4px" />
@@ -104,7 +106,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="showDialog" :title="editForm.id ? '编辑媒体' : '新增媒体'" width="600px">
+    <el-dialog v-model="showDialog" :title="editForm.id ? '编辑媒体' : '新增媒体'" width="600px" class="mobile-dialog">
       <el-form :model="editForm" label-width="80px">
         <el-form-item label="标题"><el-input v-model="editForm.title" /></el-form-item>
         <el-form-item label="所属类型">

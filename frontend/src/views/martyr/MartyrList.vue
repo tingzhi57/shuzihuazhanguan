@@ -10,22 +10,24 @@
     </div>
 
     <el-card shadow="never">
-      <el-table :data="list" stripe v-loading="loading" @row-click="goToDetail" style="cursor: pointer">
-        <el-table-column prop="name" label="姓名" width="120" />
-        <el-table-column prop="gender" label="性别" width="60" />
-        <el-table-column prop="birthDate" label="出生日期" width="120" />
-        <el-table-column prop="deathDate" label="牺牲日期" width="120" />
-        <el-table-column prop="birthplace" label="籍贯" show-overflow-tooltip />
-        <el-table-column prop="militaryUnit" label="所属部队" show-overflow-tooltip />
-        <el-table-column prop="rank" label="职务/军衔" width="120" />
-        <el-table-column label="操作" width="200" fixed="right">
-          <template #default="{ row }">
-            <el-button size="small" @click.stop="$router.push(`/martyrs/${row.id}`)">查看</el-button>
-            <el-button size="small" type="primary" @click.stop="handleEdit(row)" v-if="store.isAdmin">编辑</el-button>
-            <el-button size="small" type="danger" @click.stop="handleDelete(row)" v-if="store.isAdmin">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="table-wrapper">
+        <el-table :data="list" stripe v-loading="loading" @row-click="goToDetail" style="cursor: pointer">
+          <el-table-column prop="name" label="姓名" width="120" />
+          <el-table-column prop="gender" label="性别" width="60" />
+          <el-table-column prop="birthDate" label="出生日期" width="120" />
+          <el-table-column prop="deathDate" label="牺牲日期" width="120" />
+          <el-table-column prop="birthplace" label="籍贯" show-overflow-tooltip />
+          <el-table-column prop="militaryUnit" label="所属部队" show-overflow-tooltip />
+          <el-table-column prop="rank" label="职务/军衔" width="120" />
+          <el-table-column label="操作" width="200" fixed="right">
+            <template #default="{ row }">
+              <el-button size="small" @click.stop="$router.push(`/martyrs/${row.id}`)">查看</el-button>
+              <el-button size="small" type="primary" @click.stop="handleEdit(row)" v-if="store.isAdmin">编辑</el-button>
+              <el-button size="small" type="danger" @click.stop="handleDelete(row)" v-if="store.isAdmin">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <el-pagination
@@ -38,13 +40,13 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="editDialog" :title="editForm.id ? '编辑烈士信息' : '新增烈士信息'" width="700px">
+    <el-dialog v-model="editDialog" :title="editForm.id ? '编辑烈士信息' : '新增烈士信息'" width="700px" class="mobile-dialog">
       <el-form :model="editForm" label-width="100px">
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="姓名"><el-input v-model="editForm.name" /></el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="性别">
               <el-select v-model="editForm.gender">
                 <el-option label="男" value="男" />
@@ -53,28 +55,28 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="出生日期"><el-date-picker v-model="editForm.birthDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="牺牲日期"><el-date-picker v-model="editForm.deathDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="籍贯"><el-input v-model="editForm.birthplace" /></el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="民族"><el-input v-model="editForm.ethnicity" /></el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="政治面貌"><el-input v-model="editForm.politicalStatus" /></el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row :gutter="20" class="form-row">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="所属部队"><el-input v-model="editForm.militaryUnit" /></el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :xs="24" :sm="12" :span="12">
             <el-form-item label="职务/军衔"><el-input v-model="editForm.rank" /></el-form-item>
           </el-col>
         </el-row>
@@ -158,3 +160,22 @@ async function handleSave() {
 
 onMounted(loadData)
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .form-row :deep(.el-col) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-row .el-form-item {
+    margin-bottom: 0;
+  }
+}
+</style>

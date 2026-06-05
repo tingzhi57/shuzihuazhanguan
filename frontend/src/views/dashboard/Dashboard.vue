@@ -16,19 +16,21 @@
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+    <div class="dashboard-grid">
       <div class="martyr-detail-section">
         <h3>最新登记的烈士</h3>
-        <el-table :data="recentMartyrs" style="width: 100%" @row-click="goToMartyr" stripe>
-          <el-table-column prop="name" label="姓名" />
-          <el-table-column prop="gender" label="性别" width="60" />
-          <el-table-column prop="birthDate" label="出生日期" width="120" />
-          <el-table-column prop="militaryUnit" label="部队" show-overflow-tooltip />
-        </el-table>
+        <div class="table-wrapper">
+          <el-table :data="recentMartyrs" style="width: 100%" @row-click="goToMartyr" stripe>
+            <el-table-column prop="name" label="姓名" />
+            <el-table-column prop="gender" label="性别" width="60" />
+            <el-table-column prop="birthDate" label="出生日期" width="120" />
+            <el-table-column prop="militaryUnit" label="部队" show-overflow-tooltip />
+          </el-table>
+        </div>
       </div>
       <div class="martyr-detail-section">
         <h3>快速操作</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+        <div class="quick-actions">
           <el-button type="primary" size="large" @click="$router.push('/register')" v-if="store.isAdmin">
             <el-icon><Edit /></el-icon> 资源登记
           </el-button>
@@ -95,3 +97,32 @@ onMounted(() => {
   loadRecent()
 })
 </script>
+
+<style scoped>
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .quick-actions .el-button {
+    font-size: 13px;
+  }
+}
+</style>

@@ -8,24 +8,24 @@
       <el-tabs v-model="activeTab">
         <el-tab-pane label="烈士基本信息" name="martyr">
           <el-form :model="martyrForm" label-width="100px">
-            <el-row :gutter="20">
-              <el-col :span="8"><el-form-item label="姓名"><el-input v-model="martyrForm.name" /></el-form-item></el-col>
-              <el-col :span="8">
+            <el-row :gutter="20" class="form-row">
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="姓名"><el-input v-model="martyrForm.name" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="8" :span="8">
                 <el-form-item label="性别">
                   <el-select v-model="martyrForm.gender"><el-option label="男" value="男" /><el-option label="女" value="女" /></el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="8"><el-form-item label="民族"><el-input v-model="martyrForm.ethnicity" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="民族"><el-input v-model="martyrForm.ethnicity" /></el-form-item></el-col>
             </el-row>
-            <el-row :gutter="20">
-              <el-col :span="8"><el-form-item label="出生日期"><el-date-picker v-model="martyrForm.birthDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
-              <el-col :span="8"><el-form-item label="牺牲日期"><el-date-picker v-model="martyrForm.deathDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
-              <el-col :span="8"><el-form-item label="政治面貌"><el-input v-model="martyrForm.politicalStatus" /></el-form-item></el-col>
+            <el-row :gutter="20" class="form-row">
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="出生日期"><el-date-picker v-model="martyrForm.birthDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="牺牲日期"><el-date-picker v-model="martyrForm.deathDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="政治面貌"><el-input v-model="martyrForm.politicalStatus" /></el-form-item></el-col>
             </el-row>
             <el-form-item label="籍贯"><el-input v-model="martyrForm.birthplace" /></el-form-item>
-            <el-row :gutter="20">
-              <el-col :span="12"><el-form-item label="所属部队"><el-input v-model="martyrForm.militaryUnit" /></el-form-item></el-col>
-              <el-col :span="12"><el-form-item label="职务/军衔"><el-input v-model="martyrForm.rank" /></el-form-item></el-col>
+            <el-row :gutter="20" class="form-row">
+              <el-col :xs="24" :sm="12" :span="12"><el-form-item label="所属部队"><el-input v-model="martyrForm.militaryUnit" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="12" :span="12"><el-form-item label="职务/军衔"><el-input v-model="martyrForm.rank" /></el-form-item></el-col>
             </el-row>
             <el-form-item label="牺牲地点"><el-input v-model="martyrForm.sacrificeLocation" /></el-form-item>
             <el-form-item label="牺牲原因"><el-input v-model="martyrForm.sacrificeReason" type="textarea" /></el-form-item>
@@ -50,9 +50,9 @@
               <el-select v-model="deedForm.deedType"><el-option label="事迹" value="事迹" /><el-option label="史料" value="史料" /></el-select>
             </el-form-item>
             <el-form-item label="内容"><el-input v-model="deedForm.content" type="textarea" :rows="5" /></el-form-item>
-            <el-row :gutter="20">
-              <el-col :span="12"><el-form-item label="来源"><el-input v-model="deedForm.source" /></el-form-item></el-col>
-              <el-col :span="12"><el-form-item label="日期"><el-date-picker v-model="deedForm.date" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
+            <el-row :gutter="20" class="form-row">
+              <el-col :xs="24" :sm="12" :span="12"><el-form-item label="来源"><el-input v-model="deedForm.source" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="12" :span="12"><el-form-item label="日期"><el-date-picker v-model="deedForm.date" type="date" style="width: 100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
             </el-row>
             <el-form-item><el-button type="primary" @click="saveDeed" :loading="saving">提交登记</el-button></el-form-item>
           </el-form>
@@ -126,10 +126,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="名称"><el-input v-model="relicForm.name" /></el-form-item>
-            <el-row :gutter="20">
-              <el-col :span="8"><el-form-item label="类别"><el-input v-model="relicForm.category" /></el-form-item></el-col>
-              <el-col :span="8"><el-form-item label="材质"><el-input v-model="relicForm.material" /></el-form-item></el-col>
-              <el-col :span="8"><el-form-item label="年代"><el-input v-model="relicForm.era" /></el-form-item></el-col>
+            <el-row :gutter="20" class="form-row">
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="类别"><el-input v-model="relicForm.category" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="材质"><el-input v-model="relicForm.material" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="8" :span="8"><el-form-item label="年代"><el-input v-model="relicForm.era" /></el-form-item></el-col>
             </el-row>
             <el-form-item label="来源"><el-input v-model="relicForm.origin" /></el-form-item>
             <el-form-item label="保存状态"><el-input v-model="relicForm.preservationState" /></el-form-item>
@@ -147,9 +147,9 @@
               </el-select>
             </el-form-item>
             <el-form-item label="荣誉名称"><el-input v-model="honorForm.honorName" /></el-form-item>
-            <el-row :gutter="20">
-              <el-col :span="12"><el-form-item label="荣誉类型"><el-input v-model="honorForm.honorType" /></el-form-item></el-col>
-              <el-col :span="12"><el-form-item label="颁发单位"><el-input v-model="honorForm.issuingAuthority" /></el-form-item></el-col>
+            <el-row :gutter="20" class="form-row">
+              <el-col :xs="24" :sm="12" :span="12"><el-form-item label="荣誉类型"><el-input v-model="honorForm.honorType" /></el-form-item></el-col>
+              <el-col :xs="24" :sm="12" :span="12"><el-form-item label="颁发单位"><el-input v-model="honorForm.issuingAuthority" /></el-form-item></el-col>
             </el-row>
             <el-form-item label="颁发日期"><el-date-picker v-model="honorForm.issueDate" type="date" value-format="YYYY-MM-DD" /></el-form-item>
             <el-form-item label="描述"><el-input v-model="honorForm.description" type="textarea" /></el-form-item>
@@ -318,3 +318,22 @@ onMounted(() => {
   initTab()
 })
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .form-row :deep(.el-col) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-row .el-form-item {
+    margin-bottom: 0;
+  }
+}
+</style>
